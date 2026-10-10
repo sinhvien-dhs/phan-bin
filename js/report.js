@@ -81,7 +81,7 @@
     let h = '';
 
     /* HERO */
-    h += '<div class="rp-hero"><div class="rp-kicker">Hồ sơ #2041 · Học viện Minerva</div>' +
+    h += '<div class="rp-hero"><div class="rp-kicker">HỒ SƠ #2041 · MÔN VẬT LÝ 11 · KHỐI MINERVA</div>' +
       '<h1>BÁO CÁO TƯ DUY PHẢN BIỆN</h1>' +
       '<p class="rp-for">Người lập hồ sơ: <b>' + esc(st.playerName || 'Điều tra viên ẩn danh') + '</b> · Ngày ' +
       new Date(st.finishedAt || Date.now()).toLocaleDateString('vi-VN') + '</p>' +
@@ -208,10 +208,10 @@
   }
   function endingText(k) {
     return {
-      honest: 'Cô Lan được minh xác trước toàn trường; Hạnh không bị gạch điểm; đoạn clip bị truy ra là ghép từ ba đoạn nói khác thời điểm. Người ghép clip bị kỷ luật vì làm lộ hồ sơ kỷ luật cũ của chính mình — một cái giá lớn hơn nhiều so với mức đăng bài ban đầu.',
-      partial: 'Cô Lan được minh xác nhưng vẫn mang tiếng. Hạnh học lại được một bài, không học được một cách. Bạn đã nói đúng sự thật — nhưng bằng giọng của một người chưa chắc.',
-      wrong: 'Cô Lan bị đình chỉ giảng dạy một học kỳ để "làm rõ". Hạnh bị gạch khỏi bảng thành tích và phải nhận lại mọi khoản thưởng. Video cũ vẫn còn trên diễn đàn. Không ai biết mấy giây tùy tiện kia đã cắt từ ba đoạn khác nhau.',
-      none: 'Vụ án đóng hồ sơ ở trạng thái "chưa đủ chứng cứ". Cô Lan bị để ở chỗ: không bị kỷ luật, cũng không được minh xác. Kẻ ghép clip biết rằng im lặng cũng là một phán quyết.'
+      honest: 'Đề thi được dựng lại có giám sát và dùng làm bài tập về sai sót của công cụ. Quy chể ba tầng được ban hành: được dùng / được dùng có khai báo / không dùng ở phần thi. Thầy Tuấn bị nhắc nhở bằng văn bản về lỗi trong phần tham khảo. 34 học sinh được hỏi riêng — phần lớn họ dùng công cụ để hỏi, không phải để nộp bài, và phần lớn chỉ cần một quy tắc để biết đường.',
+      partial: 'Hải không bị kỷ luật. Nhưng Đức — người đã thú nhận và xoá lịch sử — không được gọi lên, và cậu ta mang điều đó từ hôm đó. Lỗi trong đề thi vẫn nằm đó, và kỳ sau vẫn dùng lại phần tham khảo đó. Bạn đã nói đúng sự thật — nhưng bằng giọng của một người chỉ nhìn thấy một người.',
+      wrong: 'Mười một học sinh 11A1 bị trừ nửa điểm trong một đêm, trong đó có sáu em không dùng công cụ lần nào. Việc điều tra bọn họ tạo ra đúng một thứ: một hồ sơ. Và sau đó, trong lớp học đó, không ai dám hỏi thầy một câu nữa — vì lần sau có thể mất nửa điểm. Đề thi vẫn giữ lỗi cũ. Bạn đã viết ra một quy tắc có hiệu lực thật, trong khi chính đề mà các thầy tin hơn bất cứ thứ gì còn đang sai.',
+      none: 'Vụ án đóng hồ sơ ở trạng thái "chưa đủ chứng cứ". Hải không bị kỷ luật, cũng không được minh xác. Đức không ai hỏi. Quy chể chưa ban hành. Nói chung, việc dùng công cụ vẫn diễn ra — chỉ là bây giờ nó diễn ra trong im lặng, và kẻ duy nhất biết chuyện đó là những đứa trẻ đang gian lận.'
     }[k] || 'Vụ án chưa khép lại.';
   }
   function homeDrills(weakIds, trapCount) {

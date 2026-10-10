@@ -18,6 +18,12 @@
     </ol>
     <p><b>Nút Tiếp tục luôn hiện.</b> Bạn có thể bỏ qua bất kỳ câu nào — game không bao giờ khóa bạn. Bỏ qua thì mất điểm của câu đó thôi.</p>
 
+    <h3>📚 Câu chuyện</h3>
+    <p>Bạn là điều tra viên của <b>Ban Điều tra Sự thật</b> (BĐT) — câu lạc bộ trinh thám học đường khối Vật lý 11.</p>
+    <p>Bài kiểm tra giữa kỳ được đăng lên nhóm lớp kèm dòng hỏi thật. Ba giờ sau, bài đó bị gần 500 lượt thích vì lý do duy nhất: <b>ai cũng nghĩ nó do AI viết.</b></p>
+    <p>Người bị nghi là bạn. Có 48 giờ để kết luận — bằng bằng chứng, không bằng cảm tính.</p>
+    <p class="muted">Đây là câu chuyện về AI, nhưng không phải để bạn ghét hay yêu công cụ đó. Bảy màn này dạy một kỹ năng duy nhất: <b>không bị kéo đi bởi một lập luận, dù lập luận đó nghe có vẻ chắc chắn đến đâu.</b></p>
+
     <h3>🖱️ Các kiểu tương tác — bấm như thế nào</h3>
     <table style="width:100%;font-size:13.5px;border-collapse:collapse">
       <tr><td style="padding:6px 8px;border-bottom:1px solid var(--line)"><b>Câu hỏi</b></td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">Bấm vào 1 đáp án bất kỳ — không có đáp án đúng/sai kiểu thi</td></tr>
@@ -66,8 +72,8 @@
 
   /* ───────── GHI CHÚ NHÓM THEO MÀN ───────── */
   LL.GROUP_CARDS = {
-    1: { q: 'Thảo luận: Sự thật, ý kiến hay giả thuyết?', p: 'Nhóm thống nhất: câu nào trong clip là gì?', seconds: 240 },
-    7: { q: 'Thảo luận: Nhóm trình bày kết luận', p: 'Mỗi người 2 phút. Bắt buộc có: 1 bằng chứng + 1 điều chưa chắc + 1 điều kiện.', seconds: 420 }
+    1: { q: 'Thảo luận: AI viết bài có dễ nhận ra không?', p: 'Nhóm thống nhất: cái nào trong bài của Hải là dấu hiệu của AI, cái nào không? Nhớ so với tần suất nền trước khi kết luận.', seconds: 240 },
+    7: { q: 'Thảo luận: nhóm trình bày kết luận', p: 'Mỗi người 2 phút. Bắt buộc có: 1 bằng chứng + 1 điều chưa chắc + 1 điều kiện để đổi ý.', seconds: 420 }
   };
 
   /* ───────── KHỞI ĐỘNG ───────── */
