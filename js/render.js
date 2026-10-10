@@ -307,11 +307,18 @@
         '<button class="ask-btn" data-i="' + i + '">' +
         '<span class="ask-tag ' + (qq.tag || 't-echo') + '">' + esc(qq.tagName || 'Thông tin') + '</span>' +
         '<span style="flex:1">' + esc(qq.q) + '</span></button>').join('') + '</div>' +
+      '<button class="skip-link" id="btnSkipAsk">Bỏ qua phần phỏng vấn (ít điểm hơn) ▸</button>' +
       '<div id="fbSlot"></div>');
 
     return {
       html: html,
       init: function (root) {
+        $('#btnSkipAsk', root).addEventListener('click', function () {
+          asked = step.questions.length;
+          LL.award(step.skill, 0, totalMax, { stepId: step.id });
+          LL.setTip('Bạn đã bỏ qua phần phỏng vấn. Bằng chứng từ người khác thường đáng tin hơn điều bạn tự suy đoán.');
+          LL.onStepGraded(step);
+        });
         const log = $('#qlog', root);
         let asked = 0;
         const totalMax = step.questions.reduce((s, x) => s + (x.score != null ? x.score : 1), 0);

@@ -10,6 +10,24 @@
 
   LL.graded = false;      // bước hiện tại đã được chấm chưa
 
+  /* Các bước không chấm điểm — hiện nút Tiếp tục ngay từ đầu */
+  const AUTO_TYPES = ['narr', 'brief', 'say', 'evidence'];
+
+  /* Cập nhật nút Tiếp tục cho đúng nhãn */
+  LL.refreshNextBtn = function () {
+    const st = LL.state;
+    const lv = (window.LEVELS || [])[st.levelIndex];
+    const btn = $('#btnNext');
+    if (!btn || !lv) return;
+    const last = st.stepIndex >= lv.steps.length - 1;
+    btn.textContent = last ? 'Hoàn thành màn ▸' : 'Tiếp tục ▸';
+  };
+
+  LL.showNext = function () {
+    $('#btnNext').hidden = false;
+    LL.refreshNextBtn();
+  };
+
   /* ───────────── Dựng bước hiện tại ───────────── */
   LL.renderStep = function () {
     const st = LL.state;
@@ -37,6 +55,12 @@
 
     if (typeof built.init === 'function') built.init(root);
 
+    // Bước dẫn chuyện / thu bằng chứng: không chấm điểm → hiện nút Tiếp tục luôn
+    if (AUTO_TYPES.indexOf(step.type) >= 0) {
+      LL.showNext();
+      LL.setTip('Đọc xong thì bấm <b>Tiếp tục</b> — hoặc nhấn phím <b>Enter</b>.');
+    }
+
     stage.scrollTop = 0;
     document.body.scrollTop = 0;
   };
@@ -49,8 +73,7 @@
     LL.refreshHUD();
     const btn = $('#btnNext');
     btn.hidden = false;
-    btn.textContent = (LL.state.stepIndex >= (window.LEVELS[LL.state.levelIndex].steps.length - 1))
-      ? 'Hoàn thành màn ▸' : 'Tiếp tục ▸';
+    LL.refreshNextBtn();
     // tự cuộn xuống phản hồi
     setTimeout(function () {
       const slot = document.getElementById('fbSlot');
