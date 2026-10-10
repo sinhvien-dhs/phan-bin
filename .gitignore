@@ -1,0 +1,23 @@
+# Hệ điều hành / editor
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# Node (không dùng nhưng để sẵn nếu sau này thêm công cụ)
+node_modules/
+
+# Hồ sơ game lưu cục bộ — không commit
+*.local
+save.json
+
+# File xuất báo cáo sinh ra khi chơi
+bao-cao*.txt
+ho-so-*.json
+
+# Gói / build
+dist/
+build/
+*.zip

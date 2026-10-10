@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LỰC LƯỜNG — Điều tra sự thật</title>
+<meta name="description" content="Game tư duy phản biện: điều tra một vụ scandal 47 giây tại Học viện Minerva, rèn luyện nhận diện giả định, ngụy biện và đánh giá bằng chứng.">
+<meta name="theme-color" content="#0e1320">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/game.css">
+<link rel="stylesheet" href="css/report.css">
+</head>
+<body data-screen="title">
+
+<!-- ═══════════ MÀN HÌNH TIÊU ĐỀ ═══════════ -->
+<section id="screen-title" class="screen screen--title is-active">
+  <div class="noise" aria-hidden="true"></div>
+  <div class="title-wrap">
+    <div class="title-badge">BÍ MẬT GIÁO DỤC · MỐI 4.200 NGƯỜI CHƠI ĐÃ SỐNG SÓT</div>
+    <h1 class="game-title">LỰC&nbsp;LƯỜNG</h1>
+    <p class="game-slogan">"Nghe hết trước. Tính sau."</p>
+    <p class="game-sub">
+      21:14 đêm qua, một đoạn thu âm 47 giây đã đánh sập một người.
+      Bạn có 48 giờ và bảy nghi ngờ không được phép gọi là bằng chứng.
+    </p>
+
+    <div class="title-card">
+      <div class="field">
+        <label for="playerName">Tên điều tra viên</label>
+        <input id="playerName" type="text" maxlength="24" placeholder="Nhập tên của bạn…" autocomplete="off">
+      </div>
+      <div class="field">
+        <span class="field-label">Chế độ chơi</span>
+        <div class="mode-switch" id="modeSwitch">
+          <button class="mode-btn is-on" data-mode="solo">🎧 Cá nhân</button>
+          <button class="mode-btn" data-mode="group">👥 Thảo luận nhóm</button>
+        </div>
+        <p class="mode-hint" id="modeHint">Tự chơi, tự tốc độ. Có nhật ký suy nghĩ riêng.</p>
+      </div>
+      <button id="btnStart" class="btn btn--primary btn--xl">BẮT ĐẦU ĐIỀU TRA ▸</button>
+      <div class="title-links">
+        <button class="link-btn" data-open="howto">📘 Cách chơi &amp; cách tính điểm</button>
+        <button class="link-btn" id="btnContinue" hidden>↩ Tiếp tục hồ sơ đã lưu</button>
+        <button class="link-btn" id="btnResetSave">🗑 Xóa hồ sơ lưu</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ MÀN HÌNH CHƠI ═══════════ -->
+<section id="screen-play" class="screen screen--play">
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="brandmark">LL</div>
+      <div class="topbar-title">
+        <strong id="hudLevel">MÀN 1</strong>
+        <span id="hudSkill">—</span>
+      </div>
+    </div>
+    <div class="topbar-center">
+      <div class="ct-score" title="Điểm Tư duy Phản biện">
+        <div class="ct-dial"><svg viewBox="0 0 44 44" aria-hidden="true"><circle class="dial-bg" cx="22" cy="22" r="18"></circle><circle class="dial-fg" id="dialFg" cx="22" cy="22" r="18"></circle></svg><span id="ctValue">0</span></div>
+        <div class="ct-label"><b>CT</b><span>Tư duy phản biện</span></div>
+      </div>
+      <button class="chip-btn" id="btnDossier" title="Hồ sơ bằng chứng">
+        <span class="chip-ico">🗂</span><span id="evCount">0</span><small>bằng chứng</small>
+      </button>
+      <button class="chip-btn" id="btnJournal" title="Nhật ký suy nghĩ">
+        <span class="chip-ico">✍️</span><span id="jCount">0</span><small>nhật ký</small>
+      </button>
+      <button class="chip-btn chip-btn--alert" id="btnTrap" title="Bẫy ngụy biện đã gặp">
+        <span class="chip-ico">⚠️</span><span id="trapCount">0</span><small>bẫy</small>
+      </button>
+    </div>
+    <div class="topbar-right">
+      <div class="timer" id="hudTimer" title="Thời gian còn lại của hồ sơ">48:00:00</div>
+      <button class="icon-btn" id="btnMenu" title="Menu">☰</button>
+    </div>
+  </header>
+
+  <div class="progress-rail" id="progressRail" aria-label="Tiến độ màn chơi"></div>
+
+  <main class="stage" id="stage"><!-- nội dung do engine.js dựng --></main>
+
+  <footer class="stage-foot">
+    <button class="btn btn--ghost" id="btnBack">◂ Quay lại</button>
+    <div class="foot-tip" id="footTip"></div>
+    <button class="btn btn--primary" id="btnNext" hidden>Tiếp tục ▸</button>
+  </footer>
+</section>
+
+<!-- ═══════════ MÀN HÌNH BÁO CÁO ═══════════ -->
+<section id="screen-report" class="screen screen--report">
+  <div class="report-wrap" id="reportWrap"></div>
+</section>
+
+<!-- ═══════════ MODAL ═══════════ -->
+<div class="modal" id="modalJournal" hidden>
+  <div class="modal-box modal-box--wide">
+    <header class="modal-head"><h2>✍️ Nhật ký suy nghĩ</h2><button class="modal-x" data-close>✕</button></header>
+    <div class="modal-body">
+      <p class="muted">Ghi lại lập luận của bạn — kể cả khi sai. Ở đây không chấm điểm, nhưng cuối game bạn sẽ đọc lại chính nó.</p>
+      <textarea id="journalInput" rows="5" placeholder="Ví dụ: Tôi tin cô Lan vì… Nhưng nếu camera hành lang nói ngược lại thì…"></textarea>
+      <div class="journal-quick">
+        <span>Gợi ý nhanh:</span>
+        <button class="qbtn" data-fill="Điều tôi biết chắc:">Điều tôi biết chắc:</button>
+        <button class="qbtn" data-fill="Điều tôi chỉ đoán:">Điều tôi chỉ đoán:</button>
+        <button class="qbtn" data-fill="Bằng chứng còn thiếu:">Bằng chứng còn thiếu:</button>
+        <button class="qbtn" data-fill="Quan điểm đối lập:">Quan điểm đối lập:</button>
+      </div>
+      <button class="btn btn--primary" id="btnJournalSave">💾 Lưu vào nhật ký</button>
+      <hr class="sep">
+      <div id="journalList" class="journal-list"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modalDossier" hidden>
+  <div class="modal-box modal-box--wide">
+    <header class="modal-head"><h2>🗂 Hồ sơ bằng chứng</h2><button class="modal-x" data-close>✕</button></header>
+    <div class="modal-body">
+      <div class="legend">
+        <span class="legend-item"><i class="dot dot-3"></i> Mạnh — có thể dùng để kết luận</span>
+        <span class="legend-item"><i class="dot dot-2"></i> Khá — cần thêm kiểm chứng</span>
+        <span class="legend-item"><i class="dot dot-1"></i> Yếu — chỉ là manh mối</span>
+      </div>
+      <div id="dossierList" class="dossier-list"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modalGroup" hidden>
+  <div class="modal-box modal-box--wide">
+    <header class="modal-head"><h2>👥 Chế độ thảo luận nhóm</h2><button class="modal-x" data-close>✕</button></header>
+    <div class="modal-body" id="groupBody"></div>
+  </div>
+</div>
+
+<div class="modal" id="modalHowto" hidden>
+  <div class="modal-box modal-box--wide">
+    <header class="modal-head"><h2>📘 Cách chơi &amp; cách tính điểm</h2><button class="modal-x" data-close>✕</button></header>
+    <div class="modal-body" id="howtoBody"></div>
+  </div>
+</div>
+
+<div class="modal" id="modalMenu" hidden>
+  <div class="modal-box">
+    <header class="modal-head"><h2>☰ Menu</h2><button class="modal-x" data-close>✕</button></header>
+    <div class="modal-body">
+      <button class="menu-item" id="mJournal">✍️ Mở nhật ký suy nghĩ</button>
+      <button class="menu-item" id="mDossier">🗂 Mở hồ sơ bằng chứng</button>
+      <button class="menu-item" id="mGroup">👥 Thẻ thảo luận nhóm</button>
+      <button class="menu-item" id="mSkip">⏭ Tới cuối hồ sơ (không tính điểm màn)</button>
+      <button class="menu-item" id="mExport">💾 Xuất báo cáo .txt</button>
+      <button class="menu-item menu-item--danger" id="mQuit">🚪 Về màn hình chính</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="js/core.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/render.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/report.js"></script>
+<script src="js/data/level1.js"></script>
+<script src="js/data/level2.js"></script>
+<script src="js/data/level3.js"></script>
+<script src="js/data/level4.js"></script>
+<script src="js/data/level5.js"></script>
+<script src="js/data/level6.js"></script>
+<script src="js/data/level7.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

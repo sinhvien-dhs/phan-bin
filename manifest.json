@@ -1,0 +1,17 @@
+{
+  "name": "Lực Lường — Điều tra sự thật",
+  "short_name": "Lực Lường",
+  "description": "Game tư duy phản biện: điều tra một vụ scandal 47 giây tại Học viện Minerva — rèn luyện nhận diện giả định, ngụy biện và đánh giá bằng chứng.",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0e18",
+  "theme_color": "#0e1320",
+  "lang": "vi",
+  "icons": [
+    { "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
