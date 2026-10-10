@@ -10,10 +10,27 @@
 
   /* ───────── NỘI DUNG HƯỚNG DẪN ───────── */
   const HOWTO = `
-    <h3>🎮 Bạn đóng vai ai?</h3>
-    <p>Bạn là điều tra viên của <b>Ban Điều tra Sự thật</b> (BĐT) — câu lạc bộ trinh thám học đường của Học viện Minerva.
-    Một đoạn thu âm 47 giây đã đánh sập một giáo viên. Bạn có 48 giờ (thực tế: 7 màn) để tìm ra sự thật
-    mà không để đồn đoại thắng.</p>
+    <h3>🎮 Chơi thế nào? (3 bước)</h3>
+    <ol>
+      <li><b>Đọc</b> câu chuyện / câu hỏi ở giữa màn hình.</li>
+      <li><b>Làm</b> — bấm vào ô màu vàng ở đầu thẻ, nó ghi rõ bạn cần làm gì.</li>
+      <li><b>Bấm nút cam “Tiếp tục ▸”</b> ở góc phải bên dưới để sang bước kế (hoặc nhấn phím <b>Enter</b>).</li>
+    </ol>
+    <p><b>Nút Tiếp tục luôn hiện.</b> Bạn có thể bỏ qua bất kỳ câu nào — game không bao giờ khóa bạn. Bỏ qua thì mất điểm của câu đó thôi.</p>
+
+    <h3>🖱️ Các kiểu tương tác — bấm như thế nào</h3>
+    <table style="width:100%;font-size:13.5px;border-collapse:collapse">
+      <tr><td style="padding:6px 8px;border-bottom:1px solid var(--line)"><b>Câu hỏi</b></td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">Bấm vào 1 đáp án bất kỳ — không có đáp án đúng/sai kiểu thi</td></tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid var(--line)"><b>Phỏng vấn</b></td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">Bấm vào câu hỏi nào cũng được, hỏi nhiều thì được nhiều điểm</td></tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid var(--line)"><b>Phân loại</b></td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">Bấm 1 nút cho <b>mỗi</b> mục, xong bấm nút xanh</td></tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid var(--line)"><b>Chọn nhiều</b></td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">Bấm vào mọi mục bạn thấy đúng, bấm nút xanh</td></tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid var(--line)"><b>Xếp hạng</b></td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">Chọn số 1–4 cho từng dòng, bấm nút xanh</td></tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid var(--line)"><b>Sóng âm thanh</b></td><td style="padding:6px 8px;border-bottom:1px solid var(--line)"><b>Bấm thẳng</b> lên sóng ở chỗ bị cắt, rồi bấm nút xanh</td></tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid var(--line)"><b>Ước lượng</b></td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">Kéo thanh trượt, bấm nút xanh</td></tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid var(--line)"><b>Bắt ngụy biện</b></td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">Bấm vào <b>đúng 1 câu</b> bạn cho là chỗ sai</td></tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid var(--line)"><b>Viết lập luận</b></td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">Bấm 1 mẫu có sẵn, <b>hoặc</b> bấm “💡 Cho tôi xem một mẫu”, hoặc tự viết</td></tr>
+      <tr><td style="padding:6px 8px"><b>Nhật ký</b></td><td style="padding:6px 8px">Bấm nút xanh để mở — không chấm điểm, nhưng rất đáng viết</td></tr>
+    </table>
 
     <h3>🧠 Game này chấm gì?</h3>
     <p>Không có đáp án đúng/sai ở đây. Game chấm <b>quy trình tư duy</b> của bạn qua 7 kỹ năng:</p>
@@ -122,6 +139,7 @@
     $('#btnDossier').addEventListener('click', function () { LL.renderDossier(); LL.openModal('modalDossier'); });
     $('#btnTrap').addEventListener('click', showTrapList);
     $('#btnMenu').addEventListener('click', function () { LL.openModal('modalMenu'); });
+    $('#btnHelp').addEventListener('click', function () { LL.openModal('modalHowto'); });
 
     $('#btnJournalSave').addEventListener('click', function () {
       const v = $('#journalInput').value.trim();

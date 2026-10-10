@@ -1,5 +1,5 @@
 /* LỰC LƯỜNG — service worker (chỉ dùng khi chạy qua http/https) */
-const CACHE = 'lucluong-v2';
+const CACHE = 'lucluong-v3';
 const FILES = [
   './', './index.html',
   './css/base.css', './css/game.css', './css/report.css',

@@ -152,6 +152,8 @@
       html: html,
       init: function (root) {
         const picks = new Array(step.items.length).fill(-1);
+        const cnt = () => LL.setCount(root, 'Đã chọn ' + picks.filter(p => p >= 0).length + '/' + step.items.length + ' mục.');
+        cnt();
         LL.$$('.cls-item', root).forEach(function (el, i) {
           LL.$$('.cls-btn', el).forEach(function (b, k) {
             b.addEventListener('click', function () {
@@ -159,6 +161,7 @@
               picks[i] = k;
               LL.$$('.cls-btn', el).forEach(x => x.classList.remove('is-picked'));
               b.classList.add('is-picked');
+              cnt();
             });
           });
         });
@@ -209,6 +212,8 @@
       html: html,
       init: function (root) {
         const picked = [];
+        const cnt = () => LL.setCount(root, 'Đã chọn ' + picked.length + ' mục.');
+        cnt();
         LL.$$('.multi-item', root).forEach(function (b) {
           b.addEventListener('click', function () {
             if (b.dataset.locked) return;
@@ -216,6 +221,7 @@
             const at = picked.indexOf(i);
             if (at >= 0) { picked.splice(at, 1); b.classList.remove('is-picked'); }
             else { picked.push(i); b.classList.add('is-picked'); }
+            cnt();
           });
         });
         $('#btnCheck', root).addEventListener('click', function () {
@@ -263,7 +269,13 @@
     return {
       html: html,
       init: function (root) {
-        $('#btnCheck', root).addEventListener('click', function () {
+          const cnt = () => LL.setCount(root, 'Đã xếp ' + done + '/' + step.order.length + ' dòng.');
+          let done = 0;
+          cnt();
+          LL.$$('.rank-row select').forEach(function (sel) {
+            sel.addEventListener('change', function () { if (sel.value) { done++; cnt(); } });
+          });
+          $('#btnCheck', root).addEventListener('click', function () {
           let right = 0;
           LL.$$('.rank-row', root).forEach(function (row, i) {
             const sel = $('select', row);
@@ -322,6 +334,8 @@
         const log = $('#qlog', root);
         let asked = 0;
         const totalMax = step.questions.reduce((s, x) => s + (x.score != null ? x.score : 1), 0);
+        const cnt = () => LL.setCount(root, 'Đã hỏi ' + asked + '/' + step.questions.length + ' câu.');
+        cnt();
         LL.$$('.ask-btn', root).forEach(function (b) {
           b.addEventListener('click', function () {
             const i = +b.dataset.i;
@@ -329,6 +343,7 @@
             b.disabled = true;
             const first = asked === 0;
             asked++;
+            cnt();
             let h = '<div class="qlog-item"><div class="qlog-q">' + esc(qq.q) + '</div>' +
               '<div class="qlog-a">' + esc(qq.a) + '</div>';
             if (qq.ev) h += '<div class="qlog-ev">🗂 Thu thập được: ' + esc(qq.ev.id) + '</div>';
@@ -341,8 +356,10 @@
             if (qq.trap) { LL.recordDodge(qq.trap); }
             LL.award(step.skill, qq.score != null ? qq.score : 1,
               first ? totalMax : 0, { stepId: step.id });
-            if (asked >= step.questions.length) LL.onStepGraded(step);
-            else LL.setTip('Còn ' + (step.questions.length - asked) + ' câu hỏi. Câu nào quan trọng nhất với vụ án?');
+            if (asked >= step.questions.length) {
+              LL.onStepGraded(step);
+              LL.setCount(root, 'Đã hỏi hết ' + asked + '/' + step.questions.length + ' câu — đạt điểm tối đa!');
+            } else LL.setTip('Còn ' + (step.questions.length - asked) + ' câu hỏi. Câu nào quan trọng nhất với vụ án?');
           });
         });
         if (step.questions.length) $('#fbSlot', root);
@@ -606,8 +623,10 @@
           '<button class="argue-preset" data-i="' + i + '">' + esc(p.t) + '</button>').join('') + '</div>' +
         '<div style="display:flex;align-items:center;gap:12px;margin:16px 0"><div style="flex:1;height:1px;background:var(--line)"></div>' +
         '<span class="muted">HOẶC TỰ VIẾT</span><div style="flex:1;height:1px;background:var(--line)"></div></div>' : '') +
-      '<div class="argue-box"><div class="wordcount" id="wc">0 từ · mục tiêu tối thiểu ' + (step.minWords || 40) + ' từ</div>' +
-      '<textarea id="argTa" rows="5" placeholder="' + esc(step.ph || 'Viết lập luận của bạn ở đây…') + '"></textarea></div>' +
+      '<div class="argue-box"><div class="wordcount" id="wc">0 từ · cần ít nhất ' + (step.minWords || 40) + ' từ</div>' +
+      '<textarea id="argTa" rows="5" placeholder="' + esc(step.ph || 'Viết lập luận của bạn ở đây…') + '"></textarea>' +
+      '<div class="argue-tools"><button class="tool-btn" id="btnArgSample" type="button">💡 Cho tôi xem một mẫu</button>' +
+      '<button class="tool-btn" id="btnArgClear" type="button">🗑 Xoá</button></div></div>' +
       '<button class="btn btn--primary btn--wide" id="btnArg">Trình bày lập luận</button>' +
       '<div id="fbSlot"></div>');
 
@@ -620,8 +639,9 @@
 
         ta.addEventListener('input', function () {
           const w = LL.words(ta.value);
-          wc.textContent = w + ' từ · mục tiêu tối thiểu ' + min + ' từ';
+          wc.textContent = w + ' từ · cần ít nhất ' + min + ' từ';
           wc.classList.toggle('ok', w >= min);
+          LL.setCount(root, 'Bạn đã viết ' + w + ' từ.');
         });
 
         if (step.presets) {
@@ -635,13 +655,22 @@
               ta.dispatchEvent(new Event('input'));
             });
           });
+          $('#btnArgSample', root).addEventListener('click', function () {
+            LL.$$('.argue-preset', root)[0].click();
+            LL.toast('💡 Đây là mẫu. Bạn có thể sửa lại thành ý của mình.', null, 3200);
+          });
         }
+        $('#btnArgClear', root).addEventListener('click', function () {
+          ta.value = ''; chosen = -1;
+          LL.$$('.argue-preset', root).forEach(x => x.classList.remove('is-picked'));
+          ta.dispatchEvent(new Event('input'));
+        });
 
         $('#btnArg', root).addEventListener('click', function () {
           const text = (ta.value || '').trim();
           const w = LL.words(text);
-          if (w < 12) {
-            LL.toast('Lập luận quá ngắn. Ít nhất 12 từ nhé.', 'bad');
+          if (w < 5) {
+            LL.toast('Viết thêm vài chữ nhé — hoặc bấm "Cho tôi xem một mẫu".', 'bad');
             return;
           }
           $('#btnArg', root).disabled = true;

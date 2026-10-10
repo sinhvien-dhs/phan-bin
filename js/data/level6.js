@@ -119,7 +119,7 @@ Mà vì bạn có bằng chứng.` },
       q: 'Đến lượt bạn. Bốn phút, không kịch bản.',
       sub: 'Chọn một bản có sẵn hoặc tự viết. Chấm điểm theo 3 tiêu chí: bằng chứng, đối diện đối phương, điều kiện.',
       context: 'Sau câu cuối của bạn, hội đồng kỷ luật sẽ bỏ phiếu. Họ không cần bạn thắng — họ cần biết mức độ chắc chắn của từng phát hiện. Hãy nói rõ điều đó cho họ.',
-      minWords: 50,
+      minWords: 20,
       ph: 'Lời trình bày của bạn:',
       presets: [
         { t: 'Tôi không nói cô Lan vô tội, vì BĐT chưa đủ tư liệu để nói vậy. Tôi nói điều này: clip trên diễn đàn không phải bằng chứng, vì nó bị ghép từ ba đoạn ghi khác nhau, và bản ghi gốc 11 phút của phòng giáo viên có đầy đủ câu hỏi mà clip đã cắt đi. Nếu hội đồng cần một quyết định hôm nay, xin hội đồng không lấy clip làm căn cứ. Nếu cần một quyết định về kỷ luật, tôi đề nghị đợi bản ghi gốc được thẩm xét bởi người ngoài.',

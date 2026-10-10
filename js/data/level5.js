@@ -96,7 +96,7 @@ Nếu câu trả lời là không — bạn đã tìm ra chỗ yếu.` },
       q: 'Bây giờ bạn phải nói ra điều đó — bằng chính giọng của bạn.',
       sub: 'Chọn một bản lập luận có sẵn, hoặc tự viết. Viết tốt hơn — nhưng đừng viết dài hơn cần thiết.',
       context: 'Bạn đang đứng trước giáo viên chủ nhiệm khối và đội phó BĐT. Có 4 phút. Người nghe sẽ phản biện bạn ngay sau câu cuối.',
-      minWords: 45,
+      minWords: 20,
       ph: 'Lập luận của bạn:',
       presets: [
         { t: 'Clip chứng minh cô Lan đã xem bài Hạnh trước khi nộp bài, nên điểm cô ấy chấm không còn ý nghĩa.',

@@ -159,7 +159,7 @@ Có một thứ được gọi là thói quen. Và nó không cần ai đồng �
       q: 'Viết lời kết luận của bạn — bằng lời của bạn.',
       sub: 'Đây là thứ giáo viên chủ nhiệm sẽ đọc. Bốn tiêu chí, không có đáp án mẫu duy nhất.',
       context: 'Gợi ý khung: điều tôi biết chắc / điều tôi giả định / điều tôi chưa biết / điều gì sẽ làm tôi đổi ý.',
-      minWords: 55,
+      minWords: 25,
       ph: 'Lời kết luận của bạn:',
       rubric: [
         { label: 'Nêu phát hiện cụ thể, đủ để người khác kiểm chứng lại' },
