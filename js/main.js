@@ -72,11 +72,8 @@
 
   /* ───────── KHỞI ĐỘNG ───────── */
   function boot() {
-    // theme
-    try {
-      const t = localStorage.getItem('ll_theme');
-      if (t) document.body.dataset.theme = t;
-    } catch (e) {}
+    // theme + âm thanh
+    LL.initTheme();
 
     $('#howtoBody').innerHTML = HOWTO;
 
@@ -140,6 +137,17 @@
     $('#btnTrap').addEventListener('click', showTrapList);
     $('#btnMenu').addEventListener('click', function () { LL.openModal('modalMenu'); });
     $('#btnHelp').addEventListener('click', function () { LL.openModal('modalHowto'); });
+
+    // âm thanh & giao diện
+    const paintSound = () => { $('#btnSound').textContent = LL.sfxEnabled ? '🔊' : '🔇'; };
+    $('#btnSound').addEventListener('click', function () { LL.toggleSfx(); paintSound(); });
+    $('#btnTheme').addEventListener('click', function () {
+      const t = LL.toggleTheme();
+      $('#btnTheme').textContent = t === 'light' ? '☀️' : '🌙';
+    });
+    paintSound();
+    $('#btnTheme').textContent = document.body.dataset.theme === 'light' ? '☀️' : '🌙';
+    LL.wireClickSound();
 
     $('#btnJournalSave').addEventListener('click', function () {
       const v = $('#journalInput').value.trim();

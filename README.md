@@ -92,6 +92,20 @@ Clip được **ghép từ 3 phiên ghi âm khác nhau** của phòng học giá
 
 `narr` (dẫn chuyện) · `say` (hội thoại) · `evidence` (thu bằng chứng) · `classify` (gán nhãn hàng loạt) · `pick` (chọn 1) · `multi` (chọn nhiều) · `rank` (xếp hạng độ tin cậy) · `interrogate` (phỏng vấn NPC) · `wave` (bắt điểm ghép âm thanh) · `chart` (đọc biểu đồ) · `estimate` (ước lượng tần suất nền) · `spot` (bấm chỉ câu lỗi) · `argue` (viết/chọn lập luận, chấm theo rubric) · `journal` (nhật ký suy nghĩ) · `final` (quyết định có hậu quả) · `group` (thẻ thảo luận nhóm)
 
+### 3.4 "Cảm giác được chơi"
+
+| Hệ thống | Chi tiết |
+|---|---|
+| 🔊 **Âm thanh** (WebAudio, không cần file) | Đúng → tiếng nốc lên · Rất tốt → hợp âm 5 nốt · Sai → tiếng trầm · Mắc bẫy → tiếng rít · Thu bằng chứng → tiếng pop · Xong màn → pháo hoa. Có nút 🔊/🔇, nhớ lựa chọn |
+| ✨ **Pháo hoa** | Rơi khi trả lời tốt, khi bắt được 100% một bài, khi hoàn thành màn (70 mảnh), khi kết thúc game |
+| 📳 **Rung màn hình** | Khi trả lời sai hoặc mắc bẫy |
+| 🔥 **Chuỗi combo** | Trả lời đúng 3 lần liên tiếp → badge **"🔥 NÓNG ×3"** + điểm ý tưởng; 4+ → **"🔥🔥 CHÁY LỮA"**. Mắc bẫy làm đứt chuỗi |
+| 🎯 **Phản hồi gọn** | Khối **BÀI HỌC** mặc định gấp lại, bấm "💡 Xem bài học" mới mở → giảm mỏi mắt mà không mất kiến thức |
+| 📊 **Thanh phần trăm trong màn** | Mỗi chặng của thanh tiến độ là 1 bước, tô xanh = đã qua |
+| 🌙 **Giao diện sáng/tối** | Nút trên thanh trên cùng, nhớ lựa chọn |
+| 👉 **Bảng chỉ dẫn** | Ở đầu mọi thẻ, ghi rõ phải làm gì + bộ đếm "đã chọn 2/5 mục" |
+| 🏅 **Ăn mừng màn** | Pháo hoa + thông báo "✅ Đã hoàn thành: 47 GIÂY" khi qua màn |
+
 ---
 
 ## 4. Mô tả chi tiết 2 màn mẫu
@@ -306,6 +320,7 @@ tu-duy-phan-bien/
 │   └── report.css          # Báo cáo cuối, radar, xuất file
 └── js/
     ├── core.js             # 7 kỹ năng, trạng thái, công thức chấm điểm, lưu/đọc
+    ├── fx.js               # Âm thanh WebAudio, pháo hoa, rung màn hình, combo streak
     ├── ui.js               # Toast, modal, đồng hồ 48h, HUD, hồ sơ, nhật ký
     ├── render.js           # 15 builder thẻ tương tác
     ├── engine.js           # Điều phối màn chơi, chuyển màn, hậu quả

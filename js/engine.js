@@ -75,6 +75,7 @@
     if (!step.skill) step.skill = lv.skill;   // mặc định kỹ năng của màn
 
     LL.graded = false;
+    LL.transitioning = false;
     const builder = LL.Render[step.type];
     if (!builder) { console.warn('Thiếu renderer:', step.type); LL.nextLevel(); return; }
 
@@ -108,6 +109,7 @@
     }
 
     if (typeof built.init === 'function') built.init(root);
+    LL.Render.wireFold(root);
 
     if (AUTO_TYPES.indexOf(step.type) >= 0) {
       LL.setTip('Đọc xong thì bấm <b>Tiếp tục</b> — hoặc nhấn phím <b>Enter</b>.');
@@ -144,6 +146,8 @@
 
   /* ───────────── Điều hướng ───────────── */
   LL.nextLevel = function () {
+    if (LL.transitioning) return;
+    LL.transitioning = true;
     const st = LL.state;
     const lv = (window.LEVELS || [])[st.levelIndex];
 
@@ -160,14 +164,23 @@
     if (next >= (window.LEVELS || []).length) {
       st.finishedAt = Date.now();
       LL.save();
-      LL.showReport();
+      LL.sfx('level');
+      LL.confetti(70);
+      setTimeout(() => LL.showReport(), 700);
       return;
     }
+
+    // Ăn mừng khi kết thúc một màn
+    LL.sfx('level');
+    LL.confetti(46);
+    const justDone = lv.title;
+    LL.streak = 0;
 
     st.levelIndex = next;
     st.stepIndex = 0;
 
     LL.toast('🎬 Màn ' + (next + 1) + ' · ' + (window.LEVELS[next].title), 'gold', 3400);
+    LL.toast('✅ Đã hoàn thành: ' + justDone, 'good', 4200);
 
     // thẻ nhóm nếu đang ở chế độ nhóm
     if (st.mode === 'group' && window.LEVELS[next].groupCard) {
@@ -178,6 +191,7 @@
   };
 
   LL.goBack = function () {
+    if (LL.transitioning) return;
     const st = LL.state;
     if (st.stepIndex > 0) {
       st.stepIndex--;

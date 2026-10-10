@@ -213,6 +213,14 @@
   };
 
   /* ───────────── GHI NHẬN BẪY ───────────── */
+  /* ───────── GHI NHẬN BẪY ───────── */
+  /* Bấm bất cứ đâu cũng phát tiếng click nhẹ */
+  LL.wireClickSound = function () {
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('button, .opt, .multi-item, .cls-btn, .ask-btn, .spot-seg')) LL.sfx('click');
+    }, true);
+  };
+
   LL.recordTrap = function (name, desc) {
     const st = LL.state;
     if (st.traps.some(t => t.name === name)) return;

@@ -27,18 +27,43 @@
 
   const VLABEL = { good: 'Chính xác', mid: 'Chưa đầy đủ', bad: 'Chưa đúng' };
 
+  function v0(pts, maxPts) {
+    if (pts >= maxPts) return 'great';
+    if (pts >= maxPts * 0.5) return 'ok';
+    return 'bad';
+  }
+
   R.fb = function (verdict, points, body, teach, teachTitle) {
     const kind = verdict === 'good' ? 'good' : (verdict === 'mid' ? 'mid' : 'bad');
     const ico = kind === 'good' ? '✅' : (kind === 'mid' ? '⚠️' : '❌');
     const pTxt = points == null ? ''
       : (points > 0 ? '+' + points : String(points)) + ' điểm';
+    let teachHtml = '';
+    if (teach) {
+      teachHtml = '<div class="fb-teach is-fold" data-teach><b>' + esc(teachTitle || 'Bài học') + '</b>' + teach + '</div>' +
+        '<button class="fb-fold-btn" type="button">💡 Xem bài học của lỗi này ▾</button>';
+    }
     return '<div class="fb is-' + kind + '">' +
       '<div class="fb-head">' + ico + ' ' + (VLABEL[kind] || kind) +
       (points != null ? '<span class="fb-points">' + pTxt + '</span>' : '') +
       '</div>' +
       '<div class="fb-body">' + body + '</div>' +
-      (teach ? '<div class="fb-teach"><b>' + esc(teachTitle || 'Bài học') + '</b>' + teach + '</div>' : '') +
+      teachHtml +
       '</div>';
+  };
+
+  /* Gắn nút gấp/mở khối "Bài học" sau khi chèn HTML */
+  R.wireFold = function (root) {
+    LL.$$('.fb-fold-btn', root).forEach(function (b) {
+      b.addEventListener('click', function () {
+        const t = b.previousElementSibling;
+        if (!t || !t.hasAttribute('data-teach')) return;
+        const folded = t.classList.toggle('is-fold');
+        b.classList.toggle('is-open', folded);
+        b.textContent = folded ? '💡 Xem bài học của lỗi này ▾' : '💡 Ẩn bài học ▴';
+        if (!folded) t.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    });
   };
 
   /* ═════════════ 1. NARR / BRIEF ═════════════ */
@@ -116,11 +141,18 @@
 
             if (o.trap) {
               LL.recordTrap(o.trap, o.trapDesc || '');
+              LL.sfx('trap'); LL.shake('trap'); LL.hit(false, true);
               $('#fbSlot', root).innerHTML =
                 '<div class="trap-alert"><h4>🚨 Bạn đã mắc bẫy ngụy biện</h4>' +
                 '<p><b>' + esc(o.trap) + '</b> — ' + esc(o.trapDesc || '') + '</p></div>' +
                 R.fb(o.verdict || 'bad', pts, o.fb || '', o.teach, o.teachTitle);
             } else {
+              const good = o.verdict !== 'bad';
+              LL.sfx(good ? (pts >= 4 ? 'great' : 'ok') : 'bad');
+              if (!good) LL.shake('bad');
+              const st2 = LL.hit(good, false);
+              if (st2 >= 3) { LL.sfx('combo'); LL.showStreak(); }
+              else if (good && pts >= 4) LL.confetti(22);
               $('#fbSlot', root).innerHTML = R.fb(o.verdict || 'good', pts, o.fb || '', o.teach, o.teachTitle);
             }
             LL.onStepGraded(step);
@@ -185,9 +217,13 @@
           const pts = Math.round(pct / 25);
           const v = right === step.items.length ? 'good' : (right >= step.items.length / 2 ? 'mid' : 'bad');
           LL.award(step.skill, pts, 4, { stepId: step.id });
+          LL.sfx(v === 'good' ? 'great' : (v === 'mid' ? 'ok' : 'bad'));
+          if (v !== 'good') LL.shake('bad'); else LL.confetti(20);
+          LL.hit(v === 'good', false);
           $('#fbSlot', root).innerHTML = R.fb(
             v, pts,
-            'Bạn phân loại đúng <b>' + right + '/' + step.items.length + '</b> mục.',
+            'Bạn phân loại đúng <b>' + right + '/' + step.items.length + '</b> mục.' +
+            (v === 'good' ? ' Không mục nào sai.' : ' Đọc lại từng mục bên dưới nhé.'),
             (step.teach || ''), 'Nguyên tắc');
           LL.onStepGraded(step);
           $('#btnCheck', root).disabled = true;
@@ -239,6 +275,9 @@
           const pts = Math.max(0, step.answer.length - miss - over);
           const v = (miss === 0 && over === 0) ? 'good' : (miss + over <= 1 ? 'mid' : 'bad');
           LL.award(step.skill, pts, step.answer.length, { stepId: step.id });
+          LL.sfx(v === 'good' ? 'great' : (v === 'mid' ? 'ok' : 'bad'));
+          if (v !== 'good') LL.shake('bad'); else LL.confetti(22);
+          LL.hit(v === 'good', false);
           $('#fbSlot', root).innerHTML = R.fb(v, pts,
             (step.fb || '') +
             (miss ? '\n\nBạn bỏ sót ' + miss + ' mục cần có. ' : '') +
@@ -293,6 +332,9 @@
           const pts = right;
           const v = right === step.order.length ? 'good' : (right >= step.order.length / 2 ? 'mid' : 'bad');
           LL.award(step.skill, pts, step.order.length, { stepId: step.id });
+          LL.sfx(v === 'good' ? 'great' : (v === 'mid' ? 'ok' : 'bad'));
+          if (v !== 'good') LL.shake('bad'); else LL.confetti(20);
+          LL.hit(v === 'good', false);
           $('#fbSlot', root).innerHTML = R.fb(v, pts,
             'Bạn xếp đúng <b>' + right + '/' + step.order.length + '</b> nguồn tin.',
             (step.teach || ''), 'Nguyên tắc xếp nguồn');
@@ -442,11 +484,15 @@
             if (h.res) right++;
           });
           const miss = cuts.length - right;
-          const pts = Math.max(0, right - Math.max(0, hits.length - right));
+          const over = Math.max(0, hits.length - right);
+          const pts = Math.max(0, right - over);
           $('#btnWaveCheck', root).disabled = true;
-          paint();
-          const v = (miss === 0 && hits.length === cuts.length) ? 'good' : (right >= Math.ceil(cuts.length / 2) ? 'mid' : 'bad');
+          const v = (miss === 0 && over === 0) ? 'good' : (right >= Math.ceil(cuts.length / 2) ? 'mid' : 'bad');
           LL.award(step.skill, pts, cuts.length, { stepId: step.id });
+          LL.sfx(v === 'good' ? 'great' : (v === 'mid' ? 'ok' : 'bad'));
+          if (v !== 'good') LL.shake('bad'); else LL.confetti(26);
+          LL.hit(v === 'good', false);
+          paint();
           $('#fbSlot', root).innerHTML = R.fb(v, pts,
             (step.fb || '') + (miss ? '\n\nBạn đã bỏ sót ' + miss + ' điểm ghép âm thanh.' : '\n\nBạn đã đánh dấu đủ các điểm ghép.'),
             (step.teach || ''), 'Kỹ thuật');
@@ -543,7 +589,7 @@
       '<div class="est-box"><div class="est-num" id="estNum">50</div>' +
       '<div class="est-unit">' + esc(step.unit || '') + '</div>' +
       '<input type="range" id="estRange" min="0" max="' + (step.max || 100) + '" value="50"></div>' +
-      (step.hint ? '<div class="fb-teach" style="margin-bottom:16px"><b>Dữ kiện bạn có</b>' + esc(step.hint) + '</div>' : '') +
+      (step.hint ? '<div class="fb-teach" style="margin-bottom:16px"><b>Dữ kiện bạn có</b>' + (step.hint || '') + '</div>' : '') +
       '<button class="btn btn--primary btn--wide" id="btnEst">Chốt ước lượng</button>' +
       '<div id="fbSlot"></div>');
 
@@ -558,9 +604,12 @@
           const ok = d <= tol;
           const pts = ok ? 3 : (d <= tol * 2 ? 1 : 0);
           r.disabled = true;
-          n.textContent = v + ' ✅' ;
+          n.textContent = v;
           $('#btnEst', root).disabled = true;
           LL.award(step.skill, pts, 3, { stepId: step.id });
+          LL.sfx(ok ? 'great' : (pts ? 'ok' : 'bad'));
+          if (ok) LL.confetti(24); else LL.shake('bad');
+          LL.hit(ok, false);
           $('#fbSlot', root).innerHTML = R.fb(ok ? 'good' : (pts ? 'mid' : 'bad'), pts,
             (step.fb || '') + '\n\nCon số đúng ở đây là <b>' + step.answer + '</b>. Bạn lệch ' + d + '.',
             (step.teach || ''), 'Về tần suất nền');
@@ -599,8 +648,9 @@
             });
             const pts = ok ? 3 : 0;
             LL.award(step.skill, pts, 3, { stepId: step.id });
-            if (ok) LL.recordDodge(step.fallacy);
-            else LL.recordTrap(step.fallacy, step.fallacyDesc || '');
+            if (ok) { LL.sfx('great'); LL.confetti(30); LL.recordDodge(step.fallacy); }
+            else { LL.sfx('trap'); LL.shake('trap'); LL.recordTrap(step.fallacy, step.fallacyDesc || ''); LL.hit(false, true); }
+            LL.hit(ok && false, false);
             $('#fbSlot', root).innerHTML = R.fb(ok ? 'good' : 'bad', pts,
               (ok ? 'Chính xác. ' : 'Chưa đúng điểm cần chỉ. ') + (step.fb || ''),
               (step.teach || ''), 'Ngụy biện này tên gì');
@@ -694,14 +744,19 @@
 
           const maxPts = step.presets ? (step.max || 3) : (step.rubric || []).length;
           LL.award(step.skill, pts, maxPts, { stepId: step.id });
+          LL.sfx(v0(pts, maxPts));
 
           if (chosen >= 0 && step.presets[chosen].trap) {
             LL.recordTrap(step.presets[chosen].trap, step.presets[chosen].trapDesc || '');
+            LL.sfx('trap'); LL.shake('trap'); LL.hit(false, true);
             $('#fbSlot', root).insertAdjacentHTML('afterbegin',
               '<div class="trap-alert"><h4>🚨 Bạn đã mắc bẫy</h4><p><b>' +
               esc(step.presets[chosen].trap) + '</b> — ' + esc(step.presets[chosen].trapDesc || '') + '</p></div>');
           } else {
             LL.recordDodge(step.dodge || 'Phản biện có phong cách');
+            const good = pts >= maxPts * 0.6;
+            if (!good) LL.shake('bad'); else LL.confetti(26);
+            LL.hit(good, false);
           }
 
           let h = '';
@@ -738,7 +793,7 @@
         '<div class="q-title">' + esc(step.q) + '</div>' +
         (step.sub ? '<div class="q-sub">' + (step.sub) + '</div>' : '') +
         '<button class="btn btn--primary btn--wide" id="btnOpenJ">✍️ Mở nhật ký suy nghĩ</button>' +
-        (step.hint ? '<div class="fb-teach" style="margin-top:16px"><b>Gợi ý</b>' + esc(step.hint) + '</div>' : '')),
+        (step.hint ? '<div class="fb-teach" style="margin-top:16px"><b>Gợi ý</b>' + (step.hint || '') + '</div>' : '')),
       init: function (root) {
         $('#btnOpenJ', root).addEventListener('click', function () {
           LL.openJournal(step.prompt || step.q);
@@ -774,8 +829,14 @@
             });
             const pts = o.score != null ? o.score : 0;
             LL.award(step.skill, pts, step.maxPts || 3, { stepId: step.id });
-            if (o.trap) LL.recordTrap(o.trap, o.trapDesc || '');
-            else LL.recordDodge(step.dodge || 'Kết luận có điều kiện');
+            if (o.trap) { LL.recordTrap(o.trap, o.trapDesc || ''); LL.sfx('trap'); LL.shake('trap'); LL.hit(false, true); }
+            else {
+              const good = o.verdict !== 'bad';
+              LL.sfx(good ? 'great' : 'bad');
+              if (!good) LL.shake('bad'); else LL.confetti(26);
+              LL.recordDodge(step.dodge || 'Kết luận có điều kiện');
+              LL.hit(good, false);
+            }
 
             let h = R.fb(o.verdict || 'good', pts, o.fb || '', o.teach, o.teachTitle);
             if (o.epilogue) {

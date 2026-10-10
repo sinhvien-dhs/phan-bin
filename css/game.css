@@ -196,6 +196,69 @@
   50% { box-shadow: 0 8px 30px rgba(245, 165, 36, .62); }
 }
 
+/* ═════════ HIỆU ỨNG: PHÁO HOA, RUNG, CHUỖI ═════════ */
+.confetti {
+  position: fixed; inset: 0; z-index: 200;
+  pointer-events: none; overflow: hidden;
+}
+.confetti i {
+  position: absolute; top: -24px;
+  border-radius: 2px;
+  animation: confFall linear forwards;
+}
+@keyframes confFall {
+  0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(112vh) rotate(720deg); opacity: 0; }
+}
+
+.shake-bad { animation: shk .42s cubic-bezier(.36,.07,.19,.97); }
+.shake-trap { animation: shk .55s cubic-bezier(.36,.07,.19,.97); }
+@keyframes shk {
+  10%, 90% { transform: translateX(-2px); }
+  20%, 80% { transform: translateX(4px); }
+  30%, 50%, 70% { transform: translateX(-7px); }
+  40%, 60% { transform: translateX(7px); }
+}
+
+.streak-badge {
+  position: fixed; z-index: 210;
+  top: 46%; left: 50%; transform: translate(-50%, -50%) scale(.7);
+  padding: 14px 30px; border-radius: 999px;
+  background: linear-gradient(135deg, #ff8a3d, #ff5d5d);
+  color: #fff; font-weight: 800; font-size: 22px; letter-spacing: .04em;
+  box-shadow: 0 12px 40px rgba(255, 93, 93, .45);
+  pointer-events: none; white-space: nowrap;
+  animation: streakPop 1.8s cubic-bezier(.2,.9,.3,1.4) forwards;
+}
+.streak-badge i {
+  display: block; font-size: 12px; font-style: normal;
+  font-weight: 600; opacity: .92; margin-top: 2px;
+}
+.streak-badge.out { animation: streakOut .5s ease forwards; }
+@keyframes streakPop {
+  0% { transform: translate(-50%, -50%) scale(.5); opacity: 0; }
+  18% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
+  30% { transform: translate(-50%, -50%) scale(1); }
+  80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -90%) scale(.9); opacity: 0; }
+}
+@keyframes streakOut { to { opacity: 0; } }
+
+/* ═════════ PHẢN HỒI GỌN — mặc định ẩn phần dài ═════════ */
+.fb-teach { position: relative; }
+.fb-teach.is-fold > * { display: none; }
+.fb-fold-btn {
+  margin-top: 14px; padding: 9px 16px; border-radius: 999px;
+  background: color-mix(in srgb, var(--sky) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--sky) 45%, transparent);
+  color: var(--sky); font-size: 13px; font-weight: 700;
+  transition: all .15s;
+}
+.fb-fold-btn:hover { background: color-mix(in srgb, var(--sky) 26%, transparent); }
+.fb-fold-btn.is-open {
+  background: transparent; border-color: var(--line); color: var(--txt-3);
+}
+
 /* ═════════ BANNER ĐẦU MÀN ═════════ */
 .level-banner {
   display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
